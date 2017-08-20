@@ -14,27 +14,11 @@ from troposphere import (
     Template,
 )
 
-from troposphere.iam import (
-    InstanceProfile,
-    PolicyType as IAMPolicy,
-    Role,
-)
+ApplicationName = "helloworld"
+ApplicationPort = "3000"
 
-from awacs.aws import (
-    Action,
-    Allow,
-    Policy,
-    Principal,
-    Statement,
-)
-
-from awacs.sts import AssumeRole
-
-ApplicationName = "jenkins"
-ApplicationPort = "8080"
-
-GithubAccount = "bbenson29"
-GithubAnsibleURL = "https://github.com/{}/ansible001".format(GithubAccount)
+GithubAccount = "EffectiveDevOpsWithAWS"
+GithubAnsibleURL = "https://github.com/{}/ansible".format(GithubAccount)
 
 AnsiblePullCmd = \
     "/usr/local/bin/ansible-pull -U {} {}.yml -i localhost".format(
@@ -82,33 +66,13 @@ ud = Base64(Join('\n', [
     "echo '*/10 * * * * {}' > /etc/cron.d/ansible-pull".format(AnsiblePullCmd)
 ]))
 
-t.add_resource(Role(
-    "Role",
-    AssumeRolePolicyDocument=Policy(
-        Statement=[
-            Statement(
-                Effect=Allow,
-                Action=[AssumeRole],
-                Principal=Principal("Service", ["ec2.amazonaws.com"])
-            )
-        ]
-    )
-))
-
-t.add_resource(InstanceProfile(
-    "InstanceProfile",
-    Path="/",
-    Roles=[Ref("Role")]
-))
-
 t.add_resource(ec2.Instance(
     "instance",
-    ImageId="ami-657bd20a",
+    ImageId="ami-a4c7edb2",
     InstanceType="t2.micro",
     SecurityGroups=[Ref("SecurityGroup")],
     KeyName=Ref("KeyPair"),
     UserData=ud,
-    IamInstanceProfile=Ref("InstanceProfile"),
 ))
 
 t.add_output(Output(
