@@ -20,7 +20,6 @@
 
 - name: start jenkins
   service:
-    name: jenkins-2.45
+    name: jenkins
     enabled: yes
     state: started
-    
