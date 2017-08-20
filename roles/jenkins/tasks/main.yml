@@ -23,3 +23,16 @@
     name: jenkins
     enabled: yes
     state: started
+
+
+- name: Remove java
+  yum:
+    name: java-1.7.0-openjdk
+    state: absent
+
+
+- name: Install  java
+  yum:
+    name: java-1.8.0-openjdk
+    state: present
+  notify: restart jenkins
