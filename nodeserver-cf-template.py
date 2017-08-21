@@ -100,19 +100,21 @@ t.add_resource(InstanceProfile(
     Path="/",
     Roles=[Ref("Role")]
 ))
+
 t.add_resource(IAMPolicy(
-   "Policy",
-   PolicyName="AllowS3",
-   PolicyDocument=Policy(
-     Statement=[
-       Statement(
-         Effect=Allow,
-         Action=[Action("s3","*")],
-         Resource["*"])
-     ]
-   ),
-   Roles=[Ref("Role")]
+    "Policy",
+    PolicyName="AllowS3",
+    PolicyDocument=Policy(
+        Statement=[
+            Statement(
+                Effect=Allow,
+                Action=[Action("s3", "*")],
+                Resource=["*"])
+        ]
+    ),
+    Roles=[Ref("Role")]
 ))
+
 
 t.add_resource(ec2.Instance(
     "instance",
